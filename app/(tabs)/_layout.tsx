@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router'
 import { Bell, Home, Settings, User } from '@tamagui/lucide-icons'
+import { Platform } from 'react-native'
 
 // Blue 50 #E3F2FD
 // 100 #BBDEFB
@@ -21,6 +22,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#1E88E5',
+        tabBarStyle: Platform.OS === 'web' ? { display: 'none' } : {},
       }}
     >
       <Tabs.Screen
