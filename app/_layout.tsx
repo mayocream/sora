@@ -13,7 +13,20 @@ SplashScreen.setOptions({
   fade: true,
 })
 
-const config = createTamagui(defaultConfig)
+const config = createTamagui({
+  ...defaultConfig,
+  fonts: {
+    ...defaultConfig.fonts,
+    heading: {
+      ...defaultConfig.fonts.heading,
+      family: 'NotoSansJP',
+    },
+    body: {
+      ...defaultConfig.fonts.body,
+      family: 'NotoSansJP',
+    },
+  },
+})
 
 const AppContent = () => {
   const { loading } = useAuthContext()

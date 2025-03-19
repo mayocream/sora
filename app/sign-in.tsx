@@ -51,11 +51,11 @@ export default function SignIn() {
           title: 'ログイン',
         }}
       />
-      <View flex={1} justifyContent='center' alignItems='center'>
+      <View flex={1} justifyContent='center' alignItems='center' gap='$10'>
         <Image
           source={require('../assets/images/logo.png')}
           width={140}
-          height={140}
+          height={120}
         />
         <Form gap={10} width={300}>
           <Controller
