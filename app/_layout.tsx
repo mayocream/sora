@@ -4,6 +4,7 @@ import { Stack } from 'expo-router'
 import { AuthProvider, useAuthContext } from '@/lib/context'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
+import { HelmetProvider } from 'react-helmet-async'
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync()
@@ -35,12 +36,14 @@ const AppContent = () => {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <TamaguiProvider config={config}>
-        <Theme name='light'>
-          <AppContent />
-        </Theme>
-      </TamaguiProvider>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <TamaguiProvider config={config}>
+          <Theme name='light'>
+            <AppContent />
+          </Theme>
+        </TamaguiProvider>
+      </AuthProvider>
+    </HelmetProvider>
   )
 }

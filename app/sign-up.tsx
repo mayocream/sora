@@ -8,6 +8,7 @@ import { createUserWithEmailAndPassword } from '@firebase/auth'
 import { auth } from '@/lib/auth'
 import { collection, doc, setDoc } from 'firebase/firestore'
 import { db } from '@/lib/db'
+import { Helmet } from 'react-helmet-async'
 
 const schema = z
   .object({
@@ -64,72 +65,79 @@ export default function SignUp() {
   }
 
   return (
-    <View flex={1} justifyContent='center' alignItems='center'>
+    <>
+      <Helmet>
+        <title>新規登録</title>
+      </Helmet>
       <Stack.Screen
         options={{
           title: '新規登録',
         }}
       />
-      <Image
-        source={require('../assets/images/logo.png')}
-        width={140}
-        height={140}
-      />
-      <Form gap={10} width={300}>
-        <Controller
-          control={control}
-          render={({ field: { onChange, ...props } }) => (
-            <Input
-              onChangeText={onChange}
-              placeholder='メールアドレス'
-              keyboardType='email-address'
-              {...props}
-            />
-          )}
-          name='email'
+      <View flex={1} justifyContent='center' alignItems='center'>
+        <Image
+          source={require('../assets/images/logo.png')}
+          width={140}
+          height={140}
         />
-        <ErrorMessage name='email' errors={errors} />
+        <Form gap={10} width={300}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, ...props } }) => (
+              <Input
+                onChangeText={onChange}
+                placeholder='メールアドレス'
+                keyboardType='email-address'
+                {...props}
+              />
+            )}
+            name='email'
+          />
+          <ErrorMessage name='email' errors={errors} />
 
-        <Controller
-          control={control}
-          render={({ field: { onChange, ...props } }) => (
-            <Input
-              onChangeText={onChange}
-              placeholder='パスワード'
-              secureTextEntry
-              {...props}
-            />
-          )}
-          name='password'
-        />
-        <ErrorMessage name='password' errors={errors} />
+          <Controller
+            control={control}
+            render={({ field: { onChange, ...props } }) => (
+              <Input
+                onChangeText={onChange}
+                placeholder='パスワード'
+                secureTextEntry
+                {...props}
+              />
+            )}
+            name='password'
+          />
+          <ErrorMessage name='password' errors={errors} />
 
-        <Controller
-          control={control}
-          render={({ field: { onChange, ...props } }) => (
-            <Input
-              onChangeText={onChange}
-              placeholder='パスワードの確認'
-              secureTextEntry
-              {...props}
-            />
-          )}
-          name='passwordConfirmation'
-        />
-        <ErrorMessage name='passwordConfirmation' errors={errors} />
+          <Controller
+            control={control}
+            render={({ field: { onChange, ...props } }) => (
+              <Input
+                onChangeText={onChange}
+                placeholder='パスワードの確認'
+                secureTextEntry
+                {...props}
+              />
+            )}
+            name='passwordConfirmation'
+          />
+          <ErrorMessage name='passwordConfirmation' errors={errors} />
 
-        <Form.Trigger asChild>
-          <Button onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
-            新規登録
-          </Button>
-        </Form.Trigger>
+          <Form.Trigger asChild>
+            <Button onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
+              新規登録
+            </Button>
+          </Form.Trigger>
 
-        <Separator marginVertical='$2' />
+          <Separator marginVertical='$2' />
 
-        <Link href='/sign-in' replace asChild>
-          <Button variant='outlined'>ログイン</Button>
-        </Link>
-      </Form>
-    </View>
+          <Link href='/sign-in' replace>
+            <Button variant='outlined' fullscreen>
+              ログイン
+            </Button>
+          </Link>
+        </Form>
+      </View>
+    </>
   )
 }
