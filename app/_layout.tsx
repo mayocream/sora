@@ -19,11 +19,11 @@ const config = createTamagui({
     ...defaultConfig.fonts,
     heading: {
       ...defaultConfig.fonts.heading,
-      family: 'NotoSansJP',
+      family: `NotoSansJP, ${defaultConfig.fonts.heading.family}`,
     },
     body: {
       ...defaultConfig.fonts.body,
-      family: 'NotoSansJP',
+      family: `NotoSansJP, ${defaultConfig.fonts.body.family}`,
     },
   },
 })

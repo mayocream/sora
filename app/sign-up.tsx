@@ -4,16 +4,22 @@ import { z } from 'zod'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ErrorMessage } from '@/components/input'
-import { createUserWithEmailAndPassword } from '@firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from '@firebase/auth'
 import { auth } from '@/lib/auth'
-import { collection, doc, setDoc } from 'firebase/firestore'
+import { collection, doc, runTransaction } from 'firebase/firestore'
 import { db } from '@/lib/db'
 import { Helmet } from 'react-helmet-async'
 
 const schema = z
   .object({
-    email: z.string().email(),
-    password: z.string().min(8).max(255),
+    email: z.string().email('メールアドレスの形式が正しくありません'),
+    password: z
+      .string()
+      .min(8, '8文字以上で入力してください')
+      .max(255, '255文字以内で入力してください'),
     passwordConfirmation: z.string().min(8).max(255),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
@@ -39,22 +45,32 @@ export default function SignUp() {
   })
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
+      // create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
       )
-      // allocate username
-      await setDoc(doc(collection(db, 'usernames'), userCredential.user.uid), {
-        uid: userCredential.user.uid,
-      })
-      // set initial user data
-      await setDoc(doc(collection(db, 'users'), userCredential.user.uid), {
-        name: userCredential.user.uid,
-        username: userCredential.user.uid,
-        bio: '',
+
+      // create user in our application
+      await runTransaction(db, async (transaction) => {
+        transaction.set(
+          doc(collection(db, 'usernames'), userCredential.user.uid),
+          {
+            uid: userCredential.user.uid,
+          }
+        )
+        transaction.set(doc(collection(db, 'users'), userCredential.user.uid), {
+          name: userCredential.user.uid,
+          username: userCredential.user.uid,
+          bio: '',
+        })
       })
 
+      // send email verification
+      await sendEmailVerification(userCredential.user)
+
+      // redirect to home
       router.replace('/')
     } catch (e) {
       setError('email', {
